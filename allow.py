@@ -13,7 +13,7 @@ if guess == passwd:
 
     names = []
     ls = subprocess.Popen(["ls", "-p", "."],  stdout=subprocess.PIPE,)
-    grep = subprocess.Popen(["grep", "-v", "/$"],  stdin=ls.stdout, stdout=subprocess.PIPE,)
+    grep = subprocess.Popen(["grep", "-v", "/$"],  stdin=ls.stdout, stdout=subprocess.PIPE,)    # LS + GREP
     files = grep.stdout
 
     for line in files:
@@ -26,13 +26,13 @@ if guess == passwd:
 
     for i in table:
         j = str(i)
-        j = j.replace("\n", '')
+        j = j.replace("\n", '')     # all strings
         tables.append(j)
         
 
     for line in tables:
         if line in names:
-            subprocess.run(f'sudo chattr -i {pwd}/{line}', shell=True, check=True)
+            subprocess.run(f'sudo chattr -i {pwd}/{line}', shell=True, check=True)  # cmd
             subprocess.run(f'sudo chmod 777 {pwd}/{line}', shell=True, check=True)
     print("Congrats! You guessed a password!")
 
