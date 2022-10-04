@@ -1,3 +1,5 @@
+#/bin/bash
+
 sudo touch /etc/systemd/system/lock.service
 echo "[Unit]
 Description=My bot
