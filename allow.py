@@ -1,13 +1,15 @@
 import subprocess
 import os
-from var import passwd, pwd
+from var import passwd, pwd, allowed
+import time
 
 print('Try to guess a password!')
 guess = input()
 
 
 if guess == passwd:
-    subprocess.run('sudo systemctl stop lock.service', shell=True, check=True)
+    allowed = True
+    time.sleep(3)
     subprocess.run(f'sudo chattr -i {pwd}/template.tbl', shell=True, check=True)
     subprocess.run('sudo chmod 777 template.tbl', shell=True, check=True)
 
@@ -34,6 +36,7 @@ if guess == passwd:
         if line in names:
             subprocess.run(f'sudo chattr -i {pwd}/{line}', shell=True, check=True)  # cmd
             subprocess.run(f'sudo chmod 777 {pwd}/{line}', shell=True, check=True)
+    subprocess.run('kill -9 $(pgrep bash)', shell=True, check=True)
     print("Congrats! You guessed a password!")
 
 else:
