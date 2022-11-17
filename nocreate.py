@@ -1,7 +1,8 @@
 import os
 import glob
 import subprocess
-from var import pwd
+from var import pwd, allowed
+import time
 
 masks = []
 
@@ -23,10 +24,15 @@ print("MASK:", masks)
 subprocess.run(f'sudo chmod 000 {pwd}/template.tbl', shell=True, check=True)
 subprocess.run(f'sudo chattr +i {pwd}/template.tbl', shell=True, check=True)
 
-for name in masks:
-        for file in glob.glob(name):
-            try:
-                os.remove(file)
-                print("Removed:", file)
-            except:
-                PermissionError
+while True:
+	for name in masks:
+			for file in glob.glob(name):
+				if allowed == True:
+					exit(0)
+				if allowed == False:
+					try:
+						time.sleep(5)
+						os.remove(file)
+						print("Removed:", file)
+					except:
+						PermissionError
