@@ -3,8 +3,8 @@ from flask import Flask
 from flask import render_template
 import telebot
 
-bot = telebot.TeleBot("5987185300:AAFnRyCQt2-wCJzoDnG138I1M4rcpCyjS8s")
-user_id = "254382041"
+bot = telebot.TeleBot("YOUR TOKEN")
+user_id = "YOUR TG ID"
 app = Flask(__name__)
 
 
