@@ -1,4 +1,3 @@
-
 import PySimpleGUI as psg
 import base64
 import os 
@@ -9,17 +8,19 @@ def start_the_installation(file, filename, data):
     if os.path.exists(need_path):
         return 0
     else:
+        ut = data.encode('UTF-8')
         need_data = open(need_path, 'w')
-        sign = base64.b64encode(data)
-        need_data.write(sign)
+        sign = base64.b64encode(ut)
+        need_data.write(str(sign))
         return 1
 
 
 def check_prompt(data):
-    f = open('/home/worker/Documents/signature.txt', 'w')
+    f = open('/home/worker/Documents/signature.txt', 'r')
     point = f.read()
-
-    if data == base64.b64decode(point):
+    data = data.encode('UTF-8')
+    sign = str(base64.b64encode(data))
+    if sign == point:
         subprocess.run(f'sudo chattr -i sys.tat', shell=True, check=True)
         subprocess.run(f'sudo chmod 777 sys.tat', shell=True)
         return 1
@@ -63,7 +64,7 @@ while True:
     if event == 'Cancel': 
         break
     
-    res = start_the_installation("/home/worker/Documents", "signature.txt", values[0])
+    res = start_the_installation("/home/worker/Documents", "signature.txt", str(values[0]))
 
     if res == 0:
         psg.Popup("You are already signed in!")
@@ -76,4 +77,3 @@ while True:
         window.close()
         break
         
-
