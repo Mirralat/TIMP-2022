@@ -5,10 +5,10 @@ import os.path
 def start_the_installation(file, filename, data):
     need_path = f'{file}/{filename}'
     if os.path.isfile(need_path):
-    	pass
+     pass
     else:
-	    need_data = open(need_path, 'w')
-	    need_data.write(data)
+     need_data = open(need_path, 'w')
+     need_data.write(data)
 
 
 print("Start the installation!")
@@ -30,9 +30,9 @@ except:
     FileExistsError
 
 with open("source.txt") as f:
-	data = f.read()
+ data = f.read()
 
 print(data)
 start_the_installation(path_service, 'log.txt', '0')
 start_the_installation(path_service, 'naming.txt', '')
-start_the_installation(path_main, 'YourName.py', data)
+start_the_installation(path_main, 'YourName.py', data
