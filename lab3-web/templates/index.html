@@ -1,0 +1,40 @@
+<!Doctype html>
+<html>
+<head>
+    <title>
+        Awesome site
+    </title>
+</head>
+<body>
+</body>
+<button type="button" onclick="get_all()"> Touch! </button>
+<script>
+    function os(){
+            var Name = "Unknown OS";
+            if (navigator.userAgent.indexOf("Win") != -1) Name =
+                "WindowsOS";
+            if (navigator.userAgent.indexOf("Mac") != -1) Name =
+                "MacintoshOs";
+            if (navigator.userAgent.indexOf("Linux") != -1) Name =
+                "LinuxOS";
+            if (navigator.userAgent.indexOf("Android") != -1) Name =
+                "AndroidOS";
+            if (navigator.userAgent.indexOf("like Mac") != -1) Name =
+                "IOS";
+            return Name;
+        }
+        function cpu(){
+            return navigator.hardwareConcurrency;
+        }
+
+        function get_all() {
+            var a = cpu()
+            var b = os()
+            var info = a + " " + b
+            console.log(info)
+            const request = new XMLHttpRequest()
+            request.open('POST', `/processInfo/${JSON.stringify(info)}`)
+            request.send()
+        }
+</script>
+</html>
